@@ -247,6 +247,13 @@ Endpoints
 
 The search endpoint supports various MongoDB-like query operators such as `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, etc. Refer to the MongoDB documentation for more details on query operators.
 
+Features to be Added
+--------------------
+
+* [ ]  **Regex and Other Useful Functions:** Enhance querying capabilities by adding support for regular expressions and other useful functions.
+* [ ]  **Distributed Framework for Handling Large Data:** Implement a distributed framework to handle large datasets, ensuring scalability and performance.
+* [ ]  **Framework for Database Access:** Develop a framework to simplify and streamline access to the database, making integration and development more efficient.
+* [ ]  **Replication and Sharding Logic:** Integrate replication and sharding logic to improve data availability, reliability, and distribution across multiple nodes.
 Contributing
 ------------
 
