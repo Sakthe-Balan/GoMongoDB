@@ -117,7 +117,7 @@ func DeleteAllHandler(w http.ResponseWriter, r *http.Request) {
 func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	var query map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&query); err != nil {
-		http.Error(w, "Invalid query", http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
