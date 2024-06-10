@@ -93,7 +93,7 @@ Endpoints
     }
     
     response = requests.post(url, json=data, headers=headers)
-    print(response
+    print(response)
     
 
 ### 2\. Read Resource
