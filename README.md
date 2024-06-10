@@ -83,18 +83,17 @@ Endpoints
 
     import requests
     
-    url = 'http://localhost:6942/write'
+    url = 'http://localhost:6942/write?collection=&resource='
     headers = {'Content-Type': 'application/json'}
     data = {
-        'name': 'John Doe',
-        'age': 35,
-        'city': 'New York',
-        'collection': '<Collection>',
-        'resource': '<resource>'
+        "name": "John Doe",
+        "age": 35,
+        "city": "New York",
+       
     }
     
     response = requests.post(url, json=data, headers=headers)
-    print(response.json())
+    print(response
     
 
 ### 2\. Read Resource
@@ -118,11 +117,11 @@ Endpoints
 
     import requests
     
-    url = 'http://localhost:6942/read'
+    url = 'http://localhost:6942/read?collection=&resource='
     headers = {'Content-Type': 'application/json'}
-    params = {'collection': '<Collection>', 'resource': '<resource>'}
     
-    response = requests.get(url, params=params, headers=headers)
+    
+    response = requests.get(url, headers=headers)
     print(response.json())
     
 
@@ -147,11 +146,11 @@ Endpoints
     
     import requests
     
-    url = 'http://localhost:6942/readAll'
+    url = 'http://localhost:6942/readAll?collection='
     headers = {'Content-Type': 'application/json'}
-    params = {'collection': '<Collection>'}
     
-    response = requests.get(url, params=params, headers=headers)
+    
+    response = requests.get(url, headers=headers)
     print(response.json())
 
 ### 4\. Delete Resource
@@ -175,12 +174,12 @@ Endpoints
 
     import requests
     
-    url = 'http://localhost:6942/delete'
+    url = 'http://localhost:6942/delete?collection=&resource='
     headers = {'Content-Type': 'application/json'}
-    params = {'collection': '<Collection>', 'resource': '<resource>'}
+  
     
-    response = requests.delete(url, params=params, headers=headers)
-    print(response.json())
+    response = requests.delete(url, headers=headers)
+    print(response)
 
 ### 5\. Delete All Resources
 
@@ -203,12 +202,12 @@ Endpoints
     
     import requests
     
-    url = 'http://localhost:6942/deleteAll'
+    url = 'http://localhost:6942/deleteAll?collection='
     headers = {'Content-Type': 'application/json'}
-    params = {'collection': '<Collection>'}
     
-    response = requests.delete(url, params=params, headers=headers)
-    print(response.json())
+    
+    response = requests.delete(url, headers=headers)
+    print(response)
     
 
 ### 6\. Search
@@ -234,18 +233,20 @@ Endpoints
 ### Example Usage (Python)
 
     import requests
+
     
-    url = 'http://localhost:6942/search'
+    url = 'http://localhost:6942/search?collection='
     headers = {'Content-Type': 'application/json'}
-    params = {'collection': '<Collection>'}
-    data = {'query': {'age': {'$lte': 30}}}
-    
-    response = requests.post(url, params=params, json=data, headers=headers)
-    print(response.json())
+
+    data = {"age": {"$lte": 35}}
+
+    response = requests.post(url, json=data, headers=headers)
+    print(response.text)
 
 **MongoDB-like Query Operators:**
 
-The search endpoint supports various MongoDB-like query operators such as `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, etc. Refer to the MongoDB documentation for more details on query operators.
+The search endpoint supports various MongoDB-like query operators such as `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, etc. Refer to the MongoDB documentation for more details
+ on query operators.
 
 Features to be Added
 --------------------
@@ -254,6 +255,7 @@ Features to be Added
 * [ ]  **Distributed Framework for Handling Large Data:** Implement a distributed framework to handle large datasets, ensuring scalability and performance.
 * [ ]  **Framework for Database Access:** Develop a framework to simplify and streamline access to the database, making integration and development more efficient.
 * [ ]  **Replication and Sharding Logic:** Integrate replication and sharding logic to improve data availability, reliability, and distribution across multiple nodes.
+
 Contributing
 ------------
 
