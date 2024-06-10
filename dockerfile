@@ -1,11 +1,17 @@
 # Start from the official Golang image for building the application
-FROM golang:1.18 as builder
+FROM golang:1.21.4 as builder
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
 # Copy go mod and sum files
 COPY go.mod go.sum ./
+
+# Set the Go environment variables
+ENV GO111MODULE=on \
+    GOPROXY=https://proxy.golang.org,direct \
+    GOSUMDB=off \
+    CGO_ENABLED=0
 
 # Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
 RUN go mod download
@@ -27,6 +33,3 @@ EXPOSE 6942
 
 # Command to run the executable
 ENTRYPOINT ["/app/main"]
-
-
-
