@@ -78,6 +78,23 @@ Endpoints
     curl -X POST "http://localhost:6942/write?collection=<Collection>&resource=<resource>" \
     -H "Content-Type: application/json" \
     -d '{"name":"John Doe","age":35,"city":"New York"}'
+
+### Example Usage (Python)
+
+    import requests
+    
+    url = 'http://localhost:6942/write'
+    headers = {'Content-Type': 'application/json'}
+    data = {
+        'name': 'John Doe',
+        'age': 35,
+        'city': 'New York',
+        'collection': '<Collection>',
+        'resource': '<resource>'
+    }
+    
+    response = requests.post(url, json=data, headers=headers)
+    print(response.json())
     
 
 ### 2\. Read Resource
@@ -96,6 +113,17 @@ Endpoints
 **Example Usage:**
 
     curl -X GET "http://localhost:6942/read?collection=<Collection>&resource=<resource>"
+
+### Example Usage (Python)
+
+    import requests
+    
+    url = 'http://localhost:6942/read'
+    headers = {'Content-Type': 'application/json'}
+    params = {'collection': '<Collection>', 'resource': '<resource>'}
+    
+    response = requests.get(url, params=params, headers=headers)
+    print(response.json())
     
 
 ### 3\. Read All Resources
@@ -113,7 +141,18 @@ Endpoints
 **Example Usage:**
 
     curl -X GET "http://localhost:6942/readAll?collection=<Collection>"
+
+### Example Usage (Python)
     
+    
+    import requests
+    
+    url = 'http://localhost:6942/readAll'
+    headers = {'Content-Type': 'application/json'}
+    params = {'collection': '<Collection>'}
+    
+    response = requests.get(url, params=params, headers=headers)
+    print(response.json())
 
 ### 4\. Delete Resource
 
@@ -132,6 +171,16 @@ Endpoints
 
     curl -X DELETE "http://localhost:6942/delete?collection=<Collection>&resource=<resource>"
     
+### Example Usage (Python)
+
+    import requests
+    
+    url = 'http://localhost:6942/delete'
+    headers = {'Content-Type': 'application/json'}
+    params = {'collection': '<Collection>', 'resource': '<resource>'}
+    
+    response = requests.delete(url, params=params, headers=headers)
+    print(response.json())
 
 ### 5\. Delete All Resources
 
@@ -148,6 +197,18 @@ Endpoints
 **Example Usage:**
 
     curl -X DELETE "http://localhost:6942/deleteAll?collection=<Collection>"
+
+### Example Usage (Python)
+
+    
+    import requests
+    
+    url = 'http://localhost:6942/deleteAll'
+    headers = {'Content-Type': 'application/json'}
+    params = {'collection': '<Collection>'}
+    
+    response = requests.delete(url, params=params, headers=headers)
+    print(response.json())
     
 
 ### 6\. Search
@@ -168,7 +229,19 @@ Endpoints
     curl -X POST "http://localhost:6942/search?collection=<Collection>" \
     -H "Content-Type: application/json" \
     -d '{"age":{"$lte":30}}'
+
     
+### Example Usage (Python)
+
+    import requests
+    
+    url = 'http://localhost:6942/search'
+    headers = {'Content-Type': 'application/json'}
+    params = {'collection': '<Collection>'}
+    data = {'query': {'age': {'$lte': 30}}}
+    
+    response = requests.post(url, params=params, json=data, headers=headers)
+    print(response.json())
 
 **MongoDB-like Query Operators:**
 
