@@ -30,5 +30,3 @@ ENTRYPOINT ["/app/main"]
 
 
 
-#docker build -t go-mongodb-app .
-#docker run -p 6942:6942 go-mongodb-app
