@@ -1,35 +1,24 @@
-# Start from the official Golang image for building the application
-FROM golang:1.21.4 as builder
+# Use the latest stable version of the official Golang image
+FROM golang:latest
 
-# Set the Current Working Directory inside the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy go mod and sum files
-COPY go.mod go.sum ./
+# Copy the go.mod and go.sum files over to the container
+COPY go.mod ./
+COPY go.sum ./
 
-# Set the Go environment variables
-ENV GO111MODULE=on \
-    GOPROXY=https://proxy.golang.org,direct \
-    GOSUMDB=off \
-    CGO_ENABLED=0
-
-# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+# Download all dependencies
 RUN go mod download
 
-# Copy the source code into the container
-COPY . .
+# Copy the rest of your application code over to the container
+COPY . ./
 
 # Build the Go app
-RUN go build -o main .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bin/gomongodb .
 
-# Start a new stage from scratch
-FROM alpine:latest
-
-# Copy the Pre-built binary file from the previous stage
-COPY --from=builder /app/main /app/main
-
-# Expose port 6942 to the outside world
-EXPOSE 6942
+# Expose port 8080 for the application
+EXPOSE 8080
 
 # Command to run the executable
-ENTRYPOINT ["/app/main"]
+CMD ["./bin/gomongodb"]
