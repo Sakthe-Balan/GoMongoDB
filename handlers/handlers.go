@@ -98,3 +98,34 @@ func DeleteResourceHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func DeleteAllHandler(w http.ResponseWriter, r *http.Request) {
+	collection := r.URL.Query().Get("collection")
+	if collection == "" {
+		http.Error(w, "Missing collection name", http.StatusBadRequest)
+		return
+	}
+
+	if err := database.DeleteAll(collection); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func SearchHandler(w http.ResponseWriter, r *http.Request) {
+	var query map[string]interface{}
+	if err := json.NewDecoder(r.Body).Decode(&query); err != nil {
+		http.Error(w, "Invalid query", http.StatusBadRequest)
+		return
+	}
+
+	results, err := database.Search(query)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(results)
+}

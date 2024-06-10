@@ -15,6 +15,8 @@ func main() {
 	http.HandleFunc("/read", handlers.ReadResourceHandler)
 	http.HandleFunc("/readall", handlers.ReadAllResourcesHandler)
 	http.HandleFunc("/delete", handlers.DeleteResourceHandler)
+	http.HandleFunc("/deleteall", handlers.DeleteAllHandler)
+	http.HandleFunc("/search", handlers.SearchHandler)
 
 	fmt.Println("Starting server on :6942")
 	if err := http.ListenAndServe(":6942", nil); err != nil {

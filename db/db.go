@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/jcelliott/lumber"
@@ -180,4 +181,110 @@ func stat(path string) (os.FileInfo, error) {
 		return os.Stat(path + ".json")
 	}
 	return fi, err
+}
+
+func (d *Driver) DeleteAll(collection string) error {
+	mutex := d.getOrCreateMutex(collection)
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	dir := filepath.Join(d.dir, collection)
+
+	switch fi, err := stat(dir); {
+	case fi == nil, err != nil:
+		return fmt.Errorf("Unable to find directory named %v\n", dir)
+	case fi.Mode().IsDir():
+		return os.RemoveAll(dir)
+	}
+	return nil
+}
+
+func (d *Driver) Search(query map[string]interface{}) (map[string][]string, error) {
+	d.mutex.Lock()
+	defer d.mutex.Unlock()
+
+	results := make(map[string][]string)
+	err := filepath.Walk(d.dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() && filepath.Ext(path) == ".json" {
+			content, err := ioutil.ReadFile(path)
+			if err != nil {
+				return err
+			}
+
+			var record map[string]interface{}
+			if err := json.Unmarshal(content, &record); err != nil {
+				return err
+			}
+
+			if matchesQuery(record, query) {
+				collection := filepath.Base(filepath.Dir(path))
+				resource := filepath.Base(path)
+				resource = resource[:len(resource)-len(filepath.Ext(resource))]
+				results[collection] = append(results[collection], resource)
+			}
+		}
+		return nil
+	})
+
+	return results, err
+}
+
+func matchesQuery(record, query map[string]interface{}) bool {
+	for key, value := range query {
+		if recordValue, ok := record[key]; ok {
+			switch value := value.(type) {
+			case map[string]interface{}: // Handling nested queries like { "age": { "$gt": 25 } }
+				for op, v := range value {
+					switch op {
+					case "$gt":
+						if recordValue.(float64) <= v.(float64) {
+							return false
+						}
+					case "$lt":
+						if recordValue.(float64) >= v.(float64) {
+							return false
+						}
+					case "$gte":
+						if recordValue.(float64) < v.(float64) {
+							return false
+						}
+					case "$lte":
+						if recordValue.(float64) > v.(float64) {
+							return false
+						}
+					case "$ne":
+						if recordValue == v {
+							return false
+						}
+					case "$in":
+						found := false
+						for _, item := range v.([]interface{}) {
+							if recordValue == item {
+								found = true
+								break
+							}
+						}
+						if !found {
+							return false
+						}
+					}
+				}
+			default:
+				if recordValue != value {
+					return false
+				}
+			}
+		} else {
+			return false
+		}
+	}
+	return true
+}
+
+func containsKeyword(content, keyword string) bool {
+	return strings.Contains(content, keyword)
 }
