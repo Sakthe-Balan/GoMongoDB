@@ -7,6 +7,7 @@ Introduction
 ------------
 
 GoMongoDB is a lightweight, file-based database system written in Go. It provides an easy-to-use interface for performing CRUD (Create, Read, Update, Delete) operations on data collections. Inspired by MongoDB, it supports a range of query operators for searching and filtering data.
+![mmo](https://github.com/Sakthe-Balan/GoMongoDB/assets/103580234/c76c86c2-aba5-46a5-ba58-967bc0a4d25f)
 
 Features
 --------
