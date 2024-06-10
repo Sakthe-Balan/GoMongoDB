@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/Sakthe-Balan/GoMongoDB/db"
-	"github.com/Sakthe-Balan/GoMongoDB/models"
 )
 
 var database *db.Driver
@@ -19,14 +18,21 @@ func InitDB(dir string) {
 	}
 }
 
-func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
-	var user models.User
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+func CreateResourceHandler(w http.ResponseWriter, r *http.Request) {
+	collection := r.URL.Query().Get("collection")
+	resource := r.URL.Query().Get("resource")
+	if collection == "" || resource == "" {
+		http.Error(w, "Missing collection or resource name", http.StatusBadRequest)
+		return
+	}
+
+	var data map[string]interface{}
+	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if err := database.Write("users", user.Name, user); err != nil {
+	if err := database.Write(collection, resource, data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -34,50 +40,58 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func ReadUserHandler(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("name")
-	if name == "" {
-		http.Error(w, "Missing user name", http.StatusBadRequest)
+func ReadResourceHandler(w http.ResponseWriter, r *http.Request) {
+	collection := r.URL.Query().Get("collection")
+	resource := r.URL.Query().Get("resource")
+	if collection == "" || resource == "" {
+		http.Error(w, "Missing collection or resource name", http.StatusBadRequest)
 		return
 	}
 
-	var user models.User
-	if err := database.Read("users", name, &user); err != nil {
+	var data map[string]interface{}
+	if err := database.Read(collection, resource, &data); err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(data)
 }
 
-func ReadAllUsersHandler(w http.ResponseWriter, r *http.Request) {
-	records, err := database.ReadAll("users")
+func ReadAllResourcesHandler(w http.ResponseWriter, r *http.Request) {
+	collection := r.URL.Query().Get("collection")
+	if collection == "" {
+		http.Error(w, "Missing collection name", http.StatusBadRequest)
+		return
+	}
+
+	records, err := database.ReadAll(collection)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	var users []models.User
+	var data []map[string]interface{}
 	for _, record := range records {
-		var user models.User
-		if err := json.Unmarshal([]byte(record), &user); err != nil {
+		var item map[string]interface{}
+		if err := json.Unmarshal(record, &item); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		users = append(users, user)
+		data = append(data, item)
 	}
 
-	json.NewEncoder(w).Encode(users)
+	json.NewEncoder(w).Encode(data)
 }
 
-func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("name")
-	if name == "" {
-		http.Error(w, "Missing user name", http.StatusBadRequest)
+func DeleteResourceHandler(w http.ResponseWriter, r *http.Request) {
+	collection := r.URL.Query().Get("collection")
+	resource := r.URL.Query().Get("resource")
+	if collection == "" || resource == "" {
+		http.Error(w, "Missing collection or resource name", http.StatusBadRequest)
 		return
 	}
 
-	if err := database.Delete("users", name); err != nil {
+	if err := database.Delete(collection, resource); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
