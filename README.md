@@ -140,14 +140,14 @@ Endpoints
 
 **Example Usage:**
 
-    curl -X GET "http://localhost:6942/readAll?collection=<Collection>"
+    curl -X GET "http://localhost:6942/readall?collection=<Collection>"
 
 ### Example Usage (Python)
     
     
     import requests
     
-    url = 'http://localhost:6942/readAll?collection='
+    url = 'http://localhost:6942/readall?collection='
     headers = {'Content-Type': 'application/json'}
     
     
@@ -196,14 +196,14 @@ Endpoints
 
 **Example Usage:**
 
-    curl -X DELETE "http://localhost:6942/deleteAll?collection=<Collection>"
+    curl -X DELETE "http://localhost:6942/deleteall?collection=<Collection>"
 
 ### Example Usage (Python)
 
     
     import requests
     
-    url = 'http://localhost:6942/deleteAll?collection='
+    url = 'http://localhost:6942/deleteall?collection='
     headers = {'Content-Type': 'application/json'}
     
     

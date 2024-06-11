@@ -119,23 +119,25 @@ func (d *Driver) ReadAll(collection string) ([]json.RawMessage, error) {
 	}
 	dir := filepath.Join(d.dir, collection)
 
+	d.log.Debug("Checking directory: %s", dir)
 	if _, err := stat(dir); err != nil {
+		d.log.Error("Directory check error: %s", err)
 		return nil, err
 	}
 
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
+		d.log.Error("Read directory error: %s", err)
 		return nil, err
 	}
 
 	var records []json.RawMessage
-
 	for _, file := range files {
 		b, err := ioutil.ReadFile(filepath.Join(dir, file.Name()))
 		if err != nil {
+			d.log.Error("Read file error: %s", err)
 			return nil, err
 		}
-
 		records = append(records, json.RawMessage(b))
 	}
 	return records, nil
@@ -189,14 +191,19 @@ func (d *Driver) DeleteAll(collection string) error {
 	defer mutex.Unlock()
 
 	dir := filepath.Join(d.dir, collection)
+	d.log.Debug("Checking directory: %s", dir)
 
 	switch fi, err := stat(dir); {
 	case fi == nil, err != nil:
+		d.log.Error("Unable to find directory: %s", err)
 		return fmt.Errorf("Unable to find directory named %v\n", dir)
 	case fi.Mode().IsDir():
+		d.log.Debug("Deleting directory: %s", dir)
 		return os.RemoveAll(dir)
+	default:
+		d.log.Error("Invalid file mode: %s", dir)
+		return fmt.Errorf("Invalid file mode for %v\n", dir)
 	}
-	return nil
 }
 
 func (d *Driver) Search(query map[string]interface{}) (map[string][]string, error) {
