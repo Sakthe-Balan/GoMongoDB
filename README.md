@@ -308,8 +308,8 @@ Features to be Added
 * [ ]  **Distributed Framework for Handling Large Data:** Implement a distributed framework to handle large datasets, ensuring scalability and performance.
 * [ ]  **Framework for Database Access:** Develop a framework to simplify and streamline access to the database, making integration and development more efficient.
 * [ ]  **Replication and Sharding Logic:** Integrate replication and sharding logic to improve data availability, reliability, and distribution across multiple nodes.
-* [ ]  **Dashboard for Handling Data:**
-* [ ]  **adding more modals to the database:**
+* [X]  **Dashboard for Handling Data:**
+
 
 Contributing
 ------------
