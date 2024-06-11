@@ -56,6 +56,23 @@ In GoMongoDB, data is organized into collections, which act as containers for st
 
 When performing CRUD (Create, Read, Update, Delete) operations, you specify both the collection and the resource. This allows for efficient management and retrieval of data within GoMongoDB.
 
+
+
+# Instructions to Use Dashboard
+
+To interact with the database through the dashboard, follow these steps:
+
+1. **Navigate to the dashboard directory in your terminal.**
+
+2. **Put your Streamlit UI file (let's call it `ui.py`) in this directory.**
+
+3. **Run the Streamlit app using the following command:**
+
+        streamlit run ui.py
+
+
+This command will start the Streamlit server and launch your dashboard UI in a web browser. You can then use the dashboard to interact with the database, perform CRUD operations, and visualize data as needed.
+
     
 
 Endpoints
