@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync"
 
@@ -294,4 +295,58 @@ func matchesQuery(record, query map[string]interface{}) bool {
 
 func containsKeyword(content, keyword string) bool {
 	return strings.Contains(content, keyword)
+}
+
+func (d *Driver) RegexSearch(collection string, query map[string]string) ([]map[string]interface{}, error) {
+	if collection == "" {
+		return nil, fmt.Errorf("Missing collection - unable to search")
+	}
+
+	dir := filepath.Join(d.dir, collection)
+	d.log.Debug("Checking directory: %s", dir)
+	if _, err := stat(dir); err != nil {
+		d.log.Error("Directory check error: %s", err)
+		return nil, err
+	}
+
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		d.log.Error("Read directory error: %s", err)
+		return nil, err
+	}
+
+	var records []map[string]interface{}
+	for _, file := range files {
+		content, err := ioutil.ReadFile(filepath.Join(dir, file.Name()))
+		if err != nil {
+			d.log.Error("Read file error: %s", err)
+			continue
+		}
+
+		var record map[string]interface{}
+		if err := json.Unmarshal(content, &record); err != nil {
+			d.log.Error("Unmarshal error: %s", err)
+			continue
+		}
+
+		if matchesRegex(record, query) {
+			records = append(records, record)
+		}
+	}
+	return records, nil
+}
+
+func matchesRegex(record map[string]interface{}, query map[string]string) bool {
+	for key, pattern := range query {
+		if value, ok := record[key]; ok {
+			strValue := fmt.Sprintf("%v", value)
+			matched, err := regexp.MatchString(pattern, strValue)
+			if err != nil || !matched {
+				return false
+			}
+		} else {
+			return false
+		}
+	}
+	return true
 }

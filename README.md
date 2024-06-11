@@ -244,6 +244,41 @@ Endpoints
     response = requests.post(url, json=data, headers=headers)
     print(response.text)
 
+### 7\. RegexSearch
+
+**Endpoint:** /regexsearch
+
+**Method:** POST
+
+**Description:** Search for resources using regular expressions to match fields.
+
+**Parameters:**
+
+* `collection`: The name of the collection.
+* `query`: A map of field names to regex patterns.
+
+**Example Usage:**
+
+    curl -X POST "http://localhost:6942/regexsearch?collection=<Collection>" \
+    -H "Content-Type: application/json" \
+    -d '{"name": "^John", "email": ".*@example\\.com$"}'
+
+    
+### Example Usage (Python)
+
+    import requests
+    
+    url = 'http://localhost:6942/regexsearch?collection=<Collection>'
+    headers = {'Content-Type': 'application/json'}
+    
+    data = {
+        "name": "^John",
+        "email": ".*@example\\.com$"
+    }
+    
+    response = requests.post(url, json=data, headers=headers)
+    print(response.text)
+
 **MongoDB-like Query Operators:**
 
 The search endpoint supports various MongoDB-like query operators such as `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, etc. Refer to the MongoDB documentation for more details
@@ -252,7 +287,7 @@ The search endpoint supports various MongoDB-like query operators such as `$eq`,
 Features to be Added
 --------------------
 
-* [ ]  **Regex and Other Useful Functions:** Enhance querying capabilities by adding support for regular expressions and other useful functions.
+* [X]  **Regex and Other Useful Functions:** Enhance querying capabilities by adding support for regular expressions and other useful functions.
 * [ ]  **Distributed Framework for Handling Large Data:** Implement a distributed framework to handle large datasets, ensuring scalability and performance.
 * [ ]  **Framework for Database Access:** Develop a framework to simplify and streamline access to the database, making integration and development more efficient.
 * [ ]  **Replication and Sharding Logic:** Integrate replication and sharding logic to improve data availability, reliability, and distribution across multiple nodes.

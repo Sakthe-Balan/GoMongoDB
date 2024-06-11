@@ -129,3 +129,25 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(results)
 }
+
+func RegexSearchHandler(w http.ResponseWriter, r *http.Request) {
+	collection := r.URL.Query().Get("collection")
+	if collection == "" {
+		http.Error(w, "Missing collection name", http.StatusBadRequest)
+		return
+	}
+
+	var query map[string]string
+	if err := json.NewDecoder(r.Body).Decode(&query); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	results, err := database.RegexSearch(collection, query)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(results)
+}

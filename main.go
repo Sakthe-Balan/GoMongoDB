@@ -17,6 +17,7 @@ func main() {
 	http.HandleFunc("/delete", handlers.DeleteResourceHandler)    // DELETE
 	http.HandleFunc("/deleteall", handlers.DeleteAllHandler)      // DELETE
 	http.HandleFunc("/search", handlers.SearchHandler)            // POST
+	http.HandleFunc("/regexsearch", handlers.RegexSearchHandler)
 
 	fmt.Println("Starting server on :6942")
 	if err := http.ListenAndServe(":6942", nil); err != nil {
