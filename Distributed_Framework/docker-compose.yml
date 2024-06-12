@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  node1:
+    build: .
+    ports:
+      - "7001:6942"
+    environment:
+      - NODE_ID=node1
+
+  node2:
+    build: .
+    ports:
+      - "7002:6942"
+    environment:
+      - NODE_ID=node2
+
+  node3:
+    build: .
+    ports:
+      - "7003:6942"
+    environment:
+      - NODE_ID=node3
