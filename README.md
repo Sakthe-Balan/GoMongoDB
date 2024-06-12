@@ -72,6 +72,7 @@ To interact with the database through the dashboard, follow these steps:
 
 
 This command will start the Streamlit server and launch your dashboard UI in a web browser. You can then use the dashboard to interact with the database, perform CRUD operations, and visualize data as needed.
+![mogno](https://github.com/Sakthe-Balan/GoMongoDB/assets/103580234/9750d4d9-b3aa-4f9c-9730-288816c754c9)
 
     
 
